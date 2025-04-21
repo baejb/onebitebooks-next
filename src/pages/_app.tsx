@@ -7,15 +7,24 @@ import { ReactNode } from "react";
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactNode) => ReactNode;
 };
-export default function App({
-  Component,
-  pageProps,
-}: AppProps & { Component: NextPageWithLayout }) {
-  const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  // 👉 getLayout이 함수가 아니면 기본 함수 사용
+  const getLayout =
+    typeof Component.getLayout === "function"
+      ? Component.getLayout
+      : (page: ReactNode) => page;
 
   return (
-    <>
-      <GlobalLayout>{getLayout(<Component {...pageProps} />)}</GlobalLayout>;
-    </>
+    <GlobalLayout>
+      {/* 👉 Component 자체가 함수일 때만 렌더링 */}
+      {typeof Component === "function"
+        ? getLayout(<Component {...pageProps} />)
+        : null}
+    </GlobalLayout>
   );
 }
