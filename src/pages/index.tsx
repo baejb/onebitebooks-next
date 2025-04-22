@@ -18,9 +18,10 @@ export const getStaticProps = async () => {
       allBooks,
       recoBooks,
     },
+    revalidate: 3,
   };
 };
-function Home({
+export default function Home({
   allBooks,
   recoBooks,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -45,5 +46,3 @@ function Home({
 Home.getLayout = (page: ReactNode) => {
   return <SearchableLayout>{page}</SearchableLayout>;
 };
-
-export default Home;
